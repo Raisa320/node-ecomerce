@@ -20,10 +20,10 @@ model User {
   created_at  DateTime   @default(now())
   modified_at DateTime   @updatedAt
 
-  details     Order_details[]
   address     User_address[]
+  details     Order_details?
   payments    User_payment[]
-  sessions    Shopping_session[]
+  sessions    Shopping_session?
 }
 
 model Order_details {
@@ -95,4 +95,72 @@ model Cart_item {
   created_at    DateTime   @default(now())
   modified_at   DateTime   @updatedAt
 
+}
+
+model Product {
+   id Int @id @default(autoincrement())
+   name String?
+   desc String
+   SKU String @unique
+   price Decimal
+   created_at DateTime @default(now())
+   modified_at DateTime @updatedAt
+   delete_at DateTime 
+
+   inventory Product_inventory?
+   order_items Order_items?
+   cart_item Cart_item?
+
+   category Product_category @relation(fields: [category_id], references: [id])
+   category_id Int
+
+   discount Discount @relation(fields: [discount_id], references: [id])
+   discount_id Int
+}
+
+model Product_category {
+  id Int @id @default(autoincrement())
+  name String?
+  desc String
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product[]
+}
+
+model Product_inventory{
+  id Int @id @default(autoincrement())
+  quantity Int
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product @relation(fields: [product_id], references: [id])
+  product_id Int @unique
+}
+
+model Discount {
+  id Int @id @default(autoincrement())
+  name String?
+  desc String
+  discount_percent Decimal
+  active Boolean
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product[]
+}
+
+model Payment_details{
+  id Int @default(autoincrement())
+  amount Int
+  provider String
+  status String
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  order       Order_details     @relation(fields: [order_id], references: [id])
+  order_id    Int   @unique
 }
