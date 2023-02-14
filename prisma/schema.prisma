@@ -9,3 +9,67 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Product {
+   id Int @id @default(autoincrement())
+   name String?
+   desc String
+   SKU String @unique
+   price Decimal
+   created_at DateTime @default(now())
+   modified_at DateTime @updatedAt
+   delete_at DateTime 
+
+   inventory Product_inventory?
+
+   category Product_category @relation(fields: [category_id], references: [id])
+   category_id Int
+
+   discount Discount @relation(fields: [discount_id], references: [id])
+   discount_id Int
+}
+
+model Product_category {
+  id Int @id @default(autoincrement())
+  name String?
+  desc String
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product[]
+}
+
+model Product_inventory{
+  id Int @id @default(autoincrement())
+  quantity Int
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product @relation(fields: [product_id], references: [id])
+  product_id Int @unique
+}
+
+model Discount {
+  id Int @id @default(autoincrement())
+  name String?
+  desc String
+  discount_percent Decimal
+  active Boolean
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+  delete_at DateTime 
+
+  product Product[]
+}
+
+model Payment_details{
+  id Int @default(autoincrement())
+  order_id Int
+  amount Int
+  provider String
+  status String
+  created_at DateTime @default(now())
+  modified_at DateTime @updatedAt
+}
