@@ -26,3 +26,73 @@ model User {
   sessions    Shopping_session[]
 }
 
+Order_details {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  total       Int
+  payment     Payment_details @relation(fields: [payment_id], references: [id])
+  payment_id  Int
+  created_at  DateTime   @default(now())
+  modified_at DateTime
+
+  items       Order_items[]
+}
+
+Order_items {
+  id          Int      @id @default(autoincrement())
+  order       Order_details     @relation(fields: [order_id], references: [id])
+  order_id    Int
+  product     Product     @relation(fields: [product_id], references: [id])
+  product_id  Int
+  quantity    Int
+  created_at  DateTime   @default(now())
+  modified_at DateTime
+}
+
+User_address {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       Int
+  address_line1 String
+  address_line2 String
+  city          String
+  postal_code   String
+  country       String
+  telephone     Int
+  mobile        Int
+}
+
+User_payment {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       Int
+  payment_type  String
+  provider      String
+  account_no    Int
+  expiry        Date
+}
+
+Shopping_session {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       Int
+  total         Decimal
+  created_at    DateTime   @default(now())
+  modified_at   DateTime
+
+  items         Cart_item[]
+}
+
+
+Cart_item {
+  id            Int      @id @default(autoincrement())
+  session     Shopping_session @relation(fields: [session_id], references: [id])
+  session_id  Int
+  product     Product     @relation(fields: [product_id], references: [id])
+  product_id  Int
+  quantity    Int
+  created_at    DateTime   @default(now())
+  modified_at   DateTime
+
+}
