@@ -26,7 +26,7 @@ model User {
   sessions    Shopping_session[]
 }
 
-Order_details {
+model Order_details {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [user_id], references: [id])
   user_id     Int
@@ -39,7 +39,7 @@ Order_details {
   items       Order_items[]
 }
 
-Order_items {
+model Order_items {
   id          Int      @id @default(autoincrement())
   order       Order_details     @relation(fields: [order_id], references: [id])
   order_id    Int
@@ -50,7 +50,7 @@ Order_items {
   modified_at DateTime
 }
 
-User_address {
+model User_address {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
   user_id       Int
@@ -63,17 +63,17 @@ User_address {
   mobile        Int
 }
 
-User_payment {
+model User_payment {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
   user_id       Int
   payment_type  String
   provider      String
   account_no    Int
-  expiry        Date
+  expiry        DateTime
 }
 
-Shopping_session {
+model Shopping_session {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
   user_id       Int
@@ -85,7 +85,7 @@ Shopping_session {
 }
 
 
-Cart_item {
+model Cart_item {
   id            Int      @id @default(autoincrement())
   session     Shopping_session @relation(fields: [session_id], references: [id])
   session_id  Int
