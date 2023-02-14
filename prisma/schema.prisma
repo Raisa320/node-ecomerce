@@ -29,10 +29,10 @@ model User {
 model Order_details {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [user_id], references: [id])
-  user_id     Int
+  user_id     Int       @unique
   total       Int
   payment     Payment_details @relation(fields: [payment_id], references: [id])
-  payment_id  Int
+  payment_id  Int       @unique
   created_at  DateTime   @default(now())
   modified_at DateTime   @updatedAt
 
@@ -44,7 +44,7 @@ model Order_items {
   order       Order_details     @relation(fields: [order_id], references: [id])
   order_id    Int
   product     Product     @relation(fields: [product_id], references: [id])
-  product_id  Int
+  product_id  Int         @unique
   quantity    Int
   created_at  DateTime   @default(now())
   modified_at DateTime   @updatedAt
@@ -76,7 +76,7 @@ model User_payment {
 model Shopping_session {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
-  user_id       Int
+  user_id       Int     @unique
   total         Decimal
   created_at    DateTime   @default(now())
   modified_at   DateTime   @updatedAt
@@ -90,7 +90,7 @@ model Cart_item {
   session     Shopping_session @relation(fields: [session_id], references: [id])
   session_id  Int
   product     Product     @relation(fields: [product_id], references: [id])
-  product_id  Int
+  product_id  Int       @unique
   quantity    Int
   created_at    DateTime   @default(now())
   modified_at   DateTime   @updatedAt
@@ -154,13 +154,14 @@ model Discount {
 }
 
 model Payment_details{
-  id Int @default(autoincrement())
+  id Int @default(autoincrement()) @unique
   amount Int
   provider String
   status String
   created_at DateTime @default(now())
   modified_at DateTime @updatedAt
 
-  order       Order_details     @relation(fields: [order_id], references: [id])
-  order_id    Int   @unique
+  
+  order_id    Int @unique
+  orders Order_details[] 
 }
