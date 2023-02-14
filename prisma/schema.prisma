@@ -18,7 +18,7 @@ model User {
   last_name   String
   telephone   Int
   created_at  DateTime   @default(now())
-  modified_at DateTime
+  modified_at DateTime   @updatedAt
 
   details     Order_details[]
   address     User_address[]
@@ -34,7 +34,7 @@ model Order_details {
   payment     Payment_details @relation(fields: [payment_id], references: [id])
   payment_id  Int
   created_at  DateTime   @default(now())
-  modified_at DateTime
+  modified_at DateTime   @updatedAt
 
   items       Order_items[]
 }
@@ -47,7 +47,7 @@ model Order_items {
   product_id  Int
   quantity    Int
   created_at  DateTime   @default(now())
-  modified_at DateTime
+  modified_at DateTime   @updatedAt
 }
 
 model User_address {
@@ -79,7 +79,7 @@ model Shopping_session {
   user_id       Int
   total         Decimal
   created_at    DateTime   @default(now())
-  modified_at   DateTime
+  modified_at   DateTime   @updatedAt
 
   items         Cart_item[]
 }
@@ -93,6 +93,6 @@ model Cart_item {
   product_id  Int
   quantity    Int
   created_at    DateTime   @default(now())
-  modified_at   DateTime
+  modified_at   DateTime   @updatedAt
 
 }
