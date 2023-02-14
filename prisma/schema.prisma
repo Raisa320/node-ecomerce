@@ -63,13 +63,3 @@ model Discount {
 
   product Product[]
 }
-
-model Payment_details{
-  id Int @default(autoincrement())
-  order_id Int
-  amount Int
-  provider String
-  status String
-  created_at DateTime @default(now())
-  modified_at DateTime @updatedAt
-}
