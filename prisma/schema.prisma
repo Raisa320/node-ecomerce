@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Customer {
   id          Int      @id @default(autoincrement())
   username    String   @unique
   password    String
@@ -20,16 +20,16 @@ model User {
   created_at  DateTime   @default(now())
   modified_at DateTime   @updatedAt
 
-  address     User_address[]
+  address     Customer_address[]
   details     Order_details?
-  payments    User_payment[]
+  payments    Customer_payment[]
   sessions    Shopping_session?
 }
 
 model Order_details {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [user_id], references: [id])
-  user_id     Int       @unique
+  user_id     Int      @unique
   total       Int
   payment     Payment_details @relation(fields: [payment_id], references: [id])
   payment_id  Int       @unique
@@ -50,10 +50,10 @@ model Order_items {
   modified_at DateTime   @updatedAt
 }
 
-model User_address {
+model Customer_address {
   id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
-  user_id       Int
+  customer          Customer     @relation(fields: [customer_id], references: [id])
+  customer_id       Int
   address_line1 String
   address_line2 String
   city          String
@@ -63,10 +63,10 @@ model User_address {
   mobile        Int
 }
 
-model User_payment {
+model Customer_payment {
   id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
-  user_id       Int
+  customer          Customer     @relation(fields: [customer_id], references: [id])
+  customer_id       Int
   payment_type  String
   provider      String
   account_no    Int
@@ -76,7 +76,7 @@ model User_payment {
 model Shopping_session {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
-  user_id       Int     @unique
+  user_id       Int      @unique
   total         Decimal
   created_at    DateTime   @default(now())
   modified_at   DateTime   @updatedAt
@@ -141,27 +141,35 @@ model Product_inventory{
 }
 
 model Discount {
-  id Int @id @default(autoincrement())
-  name String?
-  desc String
-  discount_percent Decimal
-  active Boolean
-  created_at DateTime @default(now())
-  modified_at DateTime @updatedAt
-  delete_at DateTime 
+  id                Int @id @default(autoincrement())
+  name              String?
+  desc              String
+  discount_percent  Decimal
+  active            Boolean
+  created_at        DateTime @default(now())
+  modified_at       DateTime @updatedAt
+  delete_at         DateTime 
 
-  product Product[]
+  product     Product[]
 }
 
 model Payment_details{
-  id Int @default(autoincrement()) @unique
+  id Int @default(autoincrement())
   amount Int
   provider String
   status String
   created_at DateTime @default(now())
   modified_at DateTime @updatedAt
 
-  
-  order_id    Int @unique
-  orders Order_details[] 
+  rol         Rol[]
+}
+
+model Rol{
+  id          Int @id @default(autoincrement())
+  name        String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  user        User @relation(fields: [user_id], references: [id])
+  user_id      Int
 }
