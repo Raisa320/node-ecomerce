@@ -1,4 +1,9 @@
-const routes = [[]];
+import { CategoryRouter } from "../components";
+
+
+const routes = [
+  ["categories", CategoryRouter],
+];
 
 export const router = (app: any) => {
   routes.forEach(([path, controller]) => {
