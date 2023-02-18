@@ -28,7 +28,7 @@ model Customer {
 
 model Order_details {
   id            Int      @id @default(autoincrement())
-  Customer      Customer @relation(fields: [customer_id], references: [id])
+  customer      Customer @relation(fields: [customer_id], references: [id])
   customer_id   Int      @unique
   payment       Payment_details @relation(fields: [payment_id], references: [id])
   payment_id    Int       @unique
@@ -77,7 +77,7 @@ model Customer_payment {
 
 model Shopping_session {
   id              Int      @id @default(autoincrement())
-  Customer        Customer     @relation(fields: [customer_id], references: [id])
+  customer        Customer     @relation(fields: [customer_id], references: [id])
   customer_id     Int      @unique
   total           Decimal
   created_at      DateTime   @default(now())
