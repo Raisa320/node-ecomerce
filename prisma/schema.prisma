@@ -20,6 +20,7 @@ model Customer {
   created_at  DateTime           @default(now())
   modified_at DateTime           @updatedAt
   deleted     Boolean            @default(false)
+
   address     Customer_address[]
   details     Order_details?
   payments    Customer_payment[]
@@ -28,34 +29,37 @@ model Customer {
 
 model Order_details {
   id          Int             @id @default(autoincrement())
-  customer    Customer        @relation(fields: [customer_id], references: [id])
-  customer_id Int             @unique
-  payment     Payment_details @relation(fields: [payment_id], references: [id])
-  payment_id  Int             @unique
-  user        User            @relation(fields: [user_id], references: [id])
-  user_id     Int
   total       Int
   created_at  DateTime        @default(now())
   modified_at DateTime        @updatedAt
   deleted     Boolean         @default(false)
   items       Order_items[]
+
+  customer    Customer        @relation(fields: [customer_id], references: [id])
+  customer_id Int             @unique
+
+  payment     Payment_details @relation(fields: [payment_id], references: [id])
+  payment_id  Int             @unique
+
+  user        User            @relation(fields: [user_id], references: [id])
+  user_id     Int
 }
 
 model Order_items {
   id          Int           @id @default(autoincrement())
-  order       Order_details @relation(fields: [order_id], references: [id])
-  order_id    Int
-  product     Product       @relation(fields: [product_id], references: [id])
-  product_id  Int           @unique
   quantity    Int
   created_at  DateTime      @default(now())
   modified_at DateTime      @updatedAt
+  
+  order       Order_details @relation(fields: [order_id], references: [id])
+  order_id    Int
+
+  product     Product       @relation(fields: [product_id], references: [id])
+  product_id  Int           @unique
 }
 
 model Customer_address {
   id            Int      @id @default(autoincrement())
-  customer      Customer @relation(fields: [customer_id], references: [id])
-  customer_id   Int
   address_line1 String
   address_line2 String
   city          String
@@ -63,46 +67,50 @@ model Customer_address {
   country       String
   telephone     Int
   mobile        Int
+  
+  customer      Customer @relation(fields: [customer_id], references: [id])
+  customer_id   Int
 }
 
 model Customer_payment {
   id           Int      @id @default(autoincrement())
-  customer     Customer @relation(fields: [customer_id], references: [id])
-  customer_id  Int
   payment_type String
   provider     String
   account_no   Int
   expiry       DateTime
+  
+  customer     Customer @relation(fields: [customer_id], references: [id])
+  customer_id  Int
 }
 
 model Shopping_session {
   id          Int         @id @default(autoincrement())
-  customer    Customer    @relation(fields: [customer_id], references: [id])
-  customer_id Int         @unique
   total       Decimal
   created_at  DateTime    @default(now())
   modified_at DateTime    @updatedAt
+  
   items       Cart_item[]
+  
+  customer    Customer    @relation(fields: [customer_id], references: [id])
+  customer_id Int         @unique
 }
 
 model Cart_item {
   id          Int              @id @default(autoincrement())
-  session     Shopping_session @relation(fields: [session_id], references: [id])
-  session_id  Int
-  product     Product          @relation(fields: [product_id], references: [id])
-  product_id  Int              @unique
   quantity    Int
   created_at  DateTime         @default(now())
   modified_at DateTime         @updatedAt
+  
+  session     Shopping_session @relation(fields: [session_id], references: [id])
+  session_id  Int
+  
+  product     Product          @relation(fields: [product_id], references: [id])
+  product_id  Int              @unique
 }
 
 model Product {
   id          Int              @id @default(autoincrement())
   name        String?
-  category    Product_category @relation(fields: [category_id], references: [id])
-  category_id Int
-  discount    Discount         @relation(fields: [discount_id], references: [id])
-  discount_id Int
   desc        String
   SKU         String           @unique
   price       Decimal
@@ -113,6 +121,12 @@ model Product {
   inventory   Product_inventory?
   order_items Order_items?
   cart_item   Cart_item?
+ 
+  category    Product_category @relation(fields: [category_id], references: [id])
+  category_id Int
+
+  discount    Discount         @relation(fields: [discount_id], references: [id])
+  discount_id Int
 }
 
 model Product_category {
@@ -128,11 +142,12 @@ model Product_category {
 
 model Product_inventory {
   id          Int      @id @default(autoincrement())
-  product     Product  @relation(fields: [product_id], references: [id])
-  product_id  Int      @unique
   quantity    Int
   created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
+  
+  product     Product  @relation(fields: [product_id], references: [id])
+  product_id  Int      @unique
 }
 
 model Discount {
@@ -171,8 +186,6 @@ model Rol {
 
 model User {
   id          Int      @id @default(autoincrement())
-  rol         Rol      @relation(fields: [rol_id], references: [id])
-  rol_id      Int
   username    String   @unique
   password    String
   first_name  String
@@ -181,6 +194,9 @@ model User {
   created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
   deleted     Boolean  @default(false)
+  
+  rol         Rol      @relation(fields: [rol_id], references: [id])
+  rol_id      Int
 
   order_details Order_details[]
 }
