@@ -19,7 +19,10 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export const findAll = async (_req: Request, res: Response): Promise<Response> => {
+export const findAll = async (
+  _req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const categories = await prisma.product_category.findMany({});
 
@@ -35,7 +38,10 @@ export const findAll = async (_req: Request, res: Response): Promise<Response> =
   }
 };
 
-export const getOne = async (req: Request,res: Response): Promise<Response> => {
+export const getOne = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idCategory = Number(req.params.idCategory);
     const category = await prisma.product_category.findUnique({
@@ -55,7 +61,10 @@ export const getOne = async (req: Request,res: Response): Promise<Response> => {
   }
 };
 
-export const update = async (req: Request,res: Response): Promise<Response> => {
+export const update = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idCategory = Number(req.params.idCategory);
 
@@ -70,7 +79,10 @@ export const update = async (req: Request,res: Response): Promise<Response> => {
       },
     });
 
-    const [_, objectCategory]=await prisma.$transaction([categoryUpdated, category])
+    const [_, objectCategory] = await prisma.$transaction([
+      categoryUpdated,
+      category,
+    ]);
 
     return success({
       res,
@@ -85,7 +97,10 @@ export const update = async (req: Request,res: Response): Promise<Response> => {
   }
 };
 
-export const remove = async (req: Request, res: Response): Promise<Response> => {
+export const remove = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idCategory = Number(req.params.idCategory);
 
