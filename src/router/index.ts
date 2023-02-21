@@ -1,9 +1,15 @@
-import { CategoryRouter, DiscountRouter, ProductRouter } from "../components";
+import {
+  CategoryRouter,
+  DiscountRouter,
+  InventoryRouter,
+  ProductRouter,
+} from "../components";
 
 const routes = [
   ["categories", CategoryRouter],
   ["products", ProductRouter],
   ["discounts", DiscountRouter],
+  ["inventories", InventoryRouter],
 ];
 
 export const router = (app: any) => {
