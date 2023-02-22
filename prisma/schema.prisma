@@ -61,12 +61,12 @@ model Order_items {
 model Customer_address {
   id            Int      @id @default(autoincrement())
   address_line1 String
-  address_line2 String
-  city          String
-  postal_code   String
-  country       String
-  telephone     Int
-  mobile        Int
+  address_line2 String?
+  city          String?
+  postal_code   String?
+  country       String?
+  telephone     Int?
+  mobile        Int?
   
   customer      Customer @relation(fields: [customer_id], references: [id])
   customer_id   Int
