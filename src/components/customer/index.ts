@@ -9,7 +9,7 @@ customerRouter.get("/:idCustomer", Controller.getOne);
 customerRouter.put("/:idCustomer", Controller.update);
 customerRouter.delete("/:idCustomer", Controller.remove);
 
-customerRouter.post("/storeAddress/:idCustomer", Controller.storeAddress);
+// customerRouter.post("/storeAddress/:idCustomer", Controller.storeAddress);
 
 export default customerRouter;
 

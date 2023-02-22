@@ -5,7 +5,24 @@ import { failure, success } from "../../response";
 export const store = async (req: Request, res: Response): Promise<Response> => {
     try {
         const data = req.body;
-        const customer = await prisma.customer.create({ data });
+        const customer = await prisma.customer.create({
+            data: {
+                username: data.username,
+                password: data.password,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                telephone: data.telephone,
+                address: {
+                    createMany: {
+                        data: data.address,
+                    }
+                }
+            },
+            include: {
+                address: true
+            }
+            
+        });
         return success({
             res,
             status: 201,
@@ -43,6 +60,9 @@ export const getOne = async (req: Request, res: Response): Promise<Response> => 
             where: {
                 id: idCustomer,
             },
+            include: {
+                address: true
+            }
         });
         return success({
             res,
@@ -103,106 +123,3 @@ export const remove = async (req: Request, res: Response): Promise<Response> => 
         });
     }
 };
-
-export const storeAddress = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const data = req.body;
-        const customerAddress = await prisma.customer_address.create({ data });
-        return success({
-            res,
-            status: 201,
-            data: customerAddress,
-        })
-
-    } catch (error: any) {
-        return failure({
-            res,
-            message: error,
-        });
-    }
-};
-
-// export const findAllAddresses = async (_req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const customerAddresses = await prisma.customer_address.findMany({});
-
-//         return success({
-//             res,
-//             data: customerAddresses
-//         })
-//     } catch (error: any) {
-//         return failure({
-//             res,
-//             message: error,
-//         })
-//     }
-// }
-
-// export const getOneAddress = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const idCustomerAddress = Number(req.params.idCustomerAddress);
-//         const customerAddress = prisma.customer_address.findUnique({
-//             where: {
-//                 id: idCustomerAddress,
-//             },
-//         });
-//         return success({
-//             res,
-//             data: customerAddress
-//         })
-//     } catch (error: any) {
-//         return failure({
-//             res,
-//             message: error,
-//         })
-//     };
-// };
-
-// export const updateAddress = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const idCustomerAddress = Number(req.params.idCustomerAddress);
-
-//         const customerAddressUpdated = prisma.customer_address.update({
-//             where: { id: idCustomerAddress },
-//             data: req.body,
-//         });
-
-//         const customerAddress = prisma.customer_address.findUnique({
-//             where: {
-//                 id: idCustomerAddress,
-//             },
-//         });
-
-//         const [_, objectCustomerAddress] = await prisma.$transaction([customerAddressUpdated, customerAddress])
-
-//         return success({
-//             res,
-//             data: objectCustomerAddress,
-//         });
-
-//     } catch (error: any) {
-//         return failure({
-//             res,
-//             message: error,
-//         });
-//     }
-// };
-
-// export const removeAddress = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const idCustomerAddress = Number(req.params.idCustomerAddress);
-
-//         await prisma.customer_address.delete({
-//             where: { id: idCustomerAddress },
-//         });
-//         return success({
-//             res,
-//             data: "Customer Address delete",
-//         });
-//     } catch (error: any) {
-//         return failure({
-//             res,
-//             message: error,
-//         });
-//     }
-// };
