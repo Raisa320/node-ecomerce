@@ -1,5 +1,5 @@
 import {
-  CategoryRouter,
+  CategoryRouter, CustomerRouter, PaymentRouter,
   DiscountRouter,
   InventoryRouter,
   ProductRouter,
@@ -14,6 +14,8 @@ const routes = [
   ["inventories", InventoryRouter],
   ["roles", RolRouter],
   ["users", UserRouter],
+  ["customers", CustomerRouter],
+  ["payments", PaymentRouter]
 ];
 
 export const router = (app: any) => {
