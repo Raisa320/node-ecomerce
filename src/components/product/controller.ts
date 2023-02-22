@@ -5,13 +5,13 @@ import { failure, success } from "../../response";
 export const store = async (req: Request, res: Response): Promise<Response> => {
   try {
     const data = req.body;
-    const category = await prisma.product_category.create({ data: data });
+    const product = await prisma.product.create({ data });
     return success({
       res,
       status: 201,
-      data: category,
+      data: product,
     });
-  } catch (error: any) {
+  } catch (error) {
     return failure({
       res,
       message: error,
@@ -24,13 +24,13 @@ export const findAll = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const categories = await prisma.product_category.findMany({});
+    const products = await prisma.product.findMany({});
 
     return success({
       res,
-      data: categories,
+      data: products,
     });
-  } catch (error: any) {
+  } catch (error) {
     return failure({
       res,
       message: error,
@@ -43,17 +43,17 @@ export const getOne = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const idCategory = Number(req.params.idCategory);
-    const category = await prisma.product_category.findUnique({
+    const idProduct = Number(req.params.idProduct);
+    const product = await prisma.product.findUnique({
       where: {
-        id: idCategory,
+        id: idProduct,
       },
     });
     return success({
       res,
-      data: category,
+      data: product,
     });
-  } catch (error: any) {
+  } catch (error) {
     return failure({
       res,
       message: error,
@@ -66,30 +66,26 @@ export const update = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const idCategory = Number(req.params.idCategory);
-
-    const categoryUpdated = prisma.product_category.update({
-      where: { id: idCategory },
+    const idProduct = Number(req.params.idProduct);
+    const productUpdated = prisma.product.update({
+      where: { id: idProduct },
       data: req.body,
     });
 
-    const category = prisma.product_category.findUnique({
-      where: {
-        id: idCategory,
-      },
+    const product = prisma.product.findUnique({
+      where: { id: idProduct },
     });
 
-    const [_, objectCategory] = await prisma.$transaction([
-      categoryUpdated,
-      category,
+    const [_, objectProduct] = await prisma.$transaction([
+      productUpdated,
+      product,
     ]);
 
     return success({
       res,
-      data: objectCategory,
+      data: objectProduct,
     });
-    //return res.status(200).json({ ok: true, data: categoryUpdated });
-  } catch (error: any) {
+  } catch (error) {
     return failure({
       res,
       message: error,
@@ -102,16 +98,16 @@ export const remove = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const idCategory = Number(req.params.idCategory);
+    const idProduct = Number(req.params.idProduct);
 
-    await prisma.product_category.delete({
-      where: { id: idCategory },
+    await prisma.product.delete({
+      where: { id: idProduct },
     });
     return success({
       res,
-      data: "Category delete",
+      data: "Product delete",
     });
-  } catch (error: any) {
+  } catch (error) {
     return failure({
       res,
       message: error,
