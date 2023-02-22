@@ -1,8 +1,12 @@
 import { CategoryRouter } from "../components";
+import { RolRouter } from "../components";
+import { UserRouter } from "../components";
 
 
 const routes = [
   ["categories", CategoryRouter],
+  ["roles", RolRouter],
+  ["users", UserRouter],
 ];
 
 export const router = (app: any) => {
