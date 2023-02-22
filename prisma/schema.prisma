@@ -111,6 +111,10 @@ model Cart_item {
 model Product {
   id          Int              @id @default(autoincrement())
   name        String?
+  category    Product_category? @relation(fields: [category_id], references: [id])
+  category_id Int
+  discount    Discount?         @relation(fields: [discount_id], references: [id])
+  discount_id Int
   desc        String
   SKU         String           @unique
   price       Decimal
