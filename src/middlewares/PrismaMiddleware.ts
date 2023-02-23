@@ -8,7 +8,6 @@ export const middelware = (prisma: PrismaClient) => {
   /***********************************/
   const models = [
     "Product_category",
-    "Customer",
     "Order_details",
     "Product",
     "Rol",

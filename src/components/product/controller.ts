@@ -107,7 +107,7 @@ export const remove = async (
       res,
       data: "Product delete",
     });
-  } catch (error) {
+  } catch (error:any) {
     return failure({
       res,
       message: error,
