@@ -1,8 +1,11 @@
 import {
-  CategoryRouter, CustomerRouter, PaymentRouter,
+  CategoryRouter,
+  CustomerRouter,
+  PaymentRouter,
   DiscountRouter,
   InventoryRouter,
   ProductRouter,
+  AuthRouter,
 } from "../components";
 import { RolRouter } from "../components";
 import { UserRouter } from "../components";
@@ -15,7 +18,8 @@ const routes = [
   ["roles", RolRouter],
   ["users", UserRouter],
   ["customers", CustomerRouter],
-  ["payments", PaymentRouter]
+  ["payments", PaymentRouter],
+  ["auth", AuthRouter],
 ];
 
 export const router = (app: any) => {

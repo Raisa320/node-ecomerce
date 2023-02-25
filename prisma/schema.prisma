@@ -25,6 +25,7 @@ model Customer {
   details     Order_details?
   payments    Customer_payment[]
   sessions    Shopping_session?
+  refreshTokens RefreshToken[]
 }
 
 model Order_details {
@@ -203,4 +204,18 @@ model User {
   rol_id      Int
 
   order_details Order_details[]
+  refreshTokens RefreshToken[]
+}
+
+
+model RefreshToken {
+  id              Int   @id @default(autoincrement())
+  hashedToken     String
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  customerId      Int
+  customer        Customer     @relation(fields: [customerId], references: [id])
+  revoked         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
