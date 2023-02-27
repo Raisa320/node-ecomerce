@@ -7,6 +7,6 @@ productRouter.post("/", Controller.store);
 productRouter.get("/", Controller.findAll);
 productRouter.get("/:idProduct", Controller.getOne);
 productRouter.put("/:idProduct", Controller.update);
-productRouter.delete("/", Controller.remove);
+productRouter.delete("/:idProduct", Controller.remove);
 
 export default productRouter;
