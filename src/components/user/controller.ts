@@ -1,17 +1,34 @@
 import type { Request, Response } from "express";
 import prisma from "../../datasource";
 import { failure, success } from "../../response";
+import { encriptPass } from "../../utils/index";
+
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
   try {
     const data = req.body;
-    const user = await prisma.user.create({ data: data ,include:{rol:true}});
+    const hashedPassword = await encriptPass(data.password);
+    const user = await prisma.user.create({ 
+      data: {
+        username: data.username,
+        password: String(hashedPassword),
+        first_name: data.first_name,
+        last_name: data.last_name,
+        telephone: data.telephone,
+        rol_id: data.rol_id 
+      } ,
+      include:{rol:true}
+    
+    });
+    
+
     return success({
       res,
       status: 201,
       data: user,
     });
   } catch (error: any) {
+    console.log(error)
     return failure({
       res,
       message: error,
