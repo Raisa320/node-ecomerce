@@ -1,33 +1,37 @@
 import type { Request, Response } from "express";
 import prisma from "../../datasource";
 import { failure, success } from "../../response";
-import jwt, { Secret } from "jsonwebtoken";
+import * as Customer from "../customer/controller";
+import * as utilsToken from "../../utils/jwt";
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const foundUser = await prisma.customer.findFirst({
-      where: {
-        username: req.body.username,
-      },
-    });
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return failure({
+        res,
+        status: 400,
+        message: "You must provide an username and a password.",
+      });
+    }
+    const foundUser = await Customer.findCustomerByUsername(username);
+
     if (!foundUser) {
-      return failure({ res, message: "Username is not correct" });
+      return failure({
+        res,
+        status: 403,
+        message: "Invalid login credentials.",
+      });
     }
 
-    const isMatch = true; //bcrypt.compareSync(user.password, foundUser.password);
+    const isMatch = true; //bcrypt.compareSync(foundUser.password, password);
 
     if (isMatch) {
-      const token = jwt.sign(
-        { id: foundUser.id?.toString(), username: foundUser.username },
-        process.env.JWT_ACCESS_SECRET!,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const token = utilsToken.generateAccessToken(foundUser);
 
       return success({ res, data: { user: foundUser, token: token } });
     } else {
-      return failure({ res, message: "Password is not correct" });
+      return failure({ res, status: 403, message: "Password is not correct" });
     }
   } catch (error) {
     return failure({
@@ -42,7 +46,31 @@ export const register = async (
   res: Response
 ): Promise<Response> => {
   try {
-    return success({ res, data: 123 });
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return failure({
+        res,
+        status: 400,
+        message: "You must provide an username and a password.",
+      });
+    }
+    const foundUser = await prisma.customer.findFirst({
+      where: {
+        username,
+      },
+    });
+    if (foundUser) {
+      return failure({
+        res,
+        status: 400,
+        message: "Username already in use.",
+      });
+    }
+    const newUser = await Customer.store(req, res);
+
+    const token = utilsToken.generateAccessToken(newUser);
+
+    return success({ res, data: { user: newUser, token: token } });
   } catch (error) {
     return failure({
       res,
@@ -75,5 +103,19 @@ export const logout = async (
       res,
       message: error,
     });
+  }
+};
+
+export const addRefreshTokenToWhiteList = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const refreshToken = await prisma.refresh_token.create({
+      data: req.body,
+    });
+    return success({ res, data: refreshToken });
+  } catch (error) {
+    return failure({ res, message: error });
   }
 };
