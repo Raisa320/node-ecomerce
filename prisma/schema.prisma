@@ -208,11 +208,11 @@ model User {
 
 
 model Refresh_token {
-  id              Int   @id @default(autoincrement())
-  hashedToken     String
-  customer_id      Int
+  id              String   @id @unique @default(uuid())
+  hashed_token    String
+  customer_id     Int
   customer        Customer    @relation(fields: [customer_id], references: [id])
   revoked         Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 }

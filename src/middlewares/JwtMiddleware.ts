@@ -7,12 +7,17 @@ export const isAuthenticated = (req: any, res: any, next: NextFunction) => {
     const authorization = req.headers["authorization"];
 
     if (!authorization) {
-      return failure({ res, status: 405, message: "🚫 Un-Authorized 🚫" });
+      return failure({
+        res,
+        status: 401,
+        message: "🚫 Token missing or invalid 🚫",
+      });
     }
+
     const token = authorization.split(" ")[1];
-    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    if (payload) {
-      return next();
+    const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
+    if (decodedToken) {
+      next();
     }
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {

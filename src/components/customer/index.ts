@@ -4,7 +4,7 @@ import { isAuthenticated } from "../../middlewares/JwtMiddleware";
 
 const customerRouter: Router = Router();
 
-customerRouter.post("/", Controller.create);
+customerRouter.post("/", isAuthenticated, Controller.create);
 customerRouter.get("/", isAuthenticated, Controller.findAll);
 customerRouter.get("/:idCustomer", Controller.getOne);
 customerRouter.put("/:idCustomer", Controller.update);
