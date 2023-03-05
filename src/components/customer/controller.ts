@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import prisma from "../../datasource";
-import { Prisma } from ".prisma/client";
+import { Prisma, Customer } from ".prisma/client";
 import { failure, success } from "../../response";
+import { encriptPass } from "../../utils/bcrypt";
 
 // Create a new function and pass the parameters onto the validator
 const createCustomer = (data: any) => {
@@ -29,25 +30,27 @@ const createCustomer = (data: any) => {
   }
 };
 
-export const store = async (req: Request, res: Response): Promise<Response> => {
+export const store = async (req: Request, _res: Response) => {
   try {
     const data = req.body;
+    const hashedPassword = await encriptPass(data.password);
+    data.password = hashedPassword;
+
     const customer = await prisma.customer.create({
       data: createCustomer(data),
     });
-    return success({
-      res,
-      status: 201,
-      data: { customer },
-    });
+    return customer;
   } catch (error: any) {
-    return failure({
-      res,
-      message: error,
-    });
+    return error;
   }
 };
-
+export const create = async (req: Request, res: Response) => {
+  try {
+    success({ res, data: await store(req, res) });
+  } catch (error) {
+    failure({ res, message: await store(req, res) });
+  }
+};
 export const findAll = async (
   _req: Request,
   res: Response
@@ -147,4 +150,14 @@ export const remove = async (
       message: error,
     });
   }
+};
+
+export const findCustomerByUsername = (username: any) => {
+  const customer = prisma.customer.findFirst({ where: { username } });
+  return customer;
+};
+
+export const findCustomerByToken = (token: any) => {
+  const customer = prisma.customer.findFirst({ where: { id: token.id } });
+  return customer;
 };

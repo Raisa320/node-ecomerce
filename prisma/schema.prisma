@@ -14,9 +14,9 @@ model Customer {
   id          Int                @id @default(autoincrement())
   username    String             @unique
   password    String
-  first_name  String
-  last_name   String
-  telephone   Int
+  first_name  String?
+  last_name   String?
+  telephone   Int?
   created_at  DateTime           @default(now())
   modified_at DateTime           @updatedAt
   deleted     Boolean            @default(false)
@@ -25,6 +25,7 @@ model Customer {
   details     Order_details?
   payments    Customer_payment[]
   sessions    Shopping_session?
+  refresh_tokens Refresh_token[]
 }
 
 model Order_details {
@@ -203,4 +204,15 @@ model User {
   rol_id      Int
 
   order_details Order_details[]
+}
+
+
+model Refresh_token {
+  id              String   @id @unique @default(uuid())
+  hashed_token    String
+  customer_id     Int
+  customer        Customer    @relation(fields: [customer_id], references: [id])
+  revoked         Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 }

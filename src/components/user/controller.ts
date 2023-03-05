@@ -1,26 +1,23 @@
 import type { Request, Response } from "express";
 import prisma from "../../datasource";
 import { failure, success } from "../../response";
-import { encriptPass } from "../../utils/index";
-
+import { encriptPass } from "../../utils/bcrypt";
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
   try {
     const data = req.body;
     const hashedPassword = await encriptPass(data.password);
-    const user = await prisma.user.create({ 
+    const user = await prisma.user.create({
       data: {
         username: data.username,
         password: String(hashedPassword),
         first_name: data.first_name,
         last_name: data.last_name,
         telephone: data.telephone,
-        rol_id: data.rol_id 
-      } ,
-      include:{rol:true}
-    
+        rol_id: data.rol_id,
+      },
+      include: { rol: true },
     });
-    
 
     return success({
       res,
@@ -28,7 +25,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
       data: user,
     });
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     return failure({
       res,
       message: error,
@@ -36,7 +33,10 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export const findAll = async (_req: Request, res: Response): Promise<Response> => {
+export const findAll = async (
+  _req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const users = await prisma.user.findMany({});
 
@@ -52,7 +52,10 @@ export const findAll = async (_req: Request, res: Response): Promise<Response> =
   }
 };
 
-export const getOne = async (req: Request,res: Response): Promise<Response> => {
+export const getOne = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idUser = Number(req.params.idUser);
     const user = await prisma.user.findUnique({
@@ -72,7 +75,10 @@ export const getOne = async (req: Request,res: Response): Promise<Response> => {
   }
 };
 
-export const update = async (req: Request,res: Response): Promise<Response> => {
+export const update = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idUser = Number(req.params.idUser);
 
@@ -87,13 +93,12 @@ export const update = async (req: Request,res: Response): Promise<Response> => {
       },
     });
 
-    const [_, objectUser]=await prisma.$transaction([userUpdated, user])
+    const [_, objectUser] = await prisma.$transaction([userUpdated, user]);
 
     return success({
       res,
       data: objectUser,
     });
-
   } catch (error: any) {
     return failure({
       res,
@@ -102,7 +107,10 @@ export const update = async (req: Request,res: Response): Promise<Response> => {
   }
 };
 
-export const remove = async (req: Request, res: Response): Promise<Response> => {
+export const remove = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const idUser = Number(req.params.idUser);
 
